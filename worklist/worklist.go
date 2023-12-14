@@ -25,3 +25,13 @@ func New(bufSize int) Worklist {
 func NewJob(path string) Entry {
 	return Entry{path}
 }
+
+// We add a `NoMoreJobs` message to the worklist for each
+// worker that we are using. Once the worker receives this
+// message, it will terminate. After each worker terminates,
+// the program can continue.
+func (w *Worklist) Finalize(numWorkers int) {
+	for i := 0; i < numWorkers; i++ {
+		w.Add(Entry{""})
+	}
+}
